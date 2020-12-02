@@ -18,9 +18,9 @@ Requires:   bash
 # for tar, compress sources
 Requires:   tar
 # in case .bz2 is used in .spec
-Requires:   bzip2
+Requires:   pbzip2
 # in case .gz is used in .spec
-Requires:   gzip
+Requires:   pigz
 # in case .xz is used in .spec
 Requires:   xz
 # for find and xargs

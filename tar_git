@@ -332,15 +332,15 @@ find_compression () {
 
   case "$SOURCE_FILENAME" in
       *.tar.gz)
-          COMPRESS_COMMAND="gzip -n -1"
+          COMPRESS_COMMAND="pigz -n -1"
           COMPRESS_EXT="tar.gz"
           ;;
       *.tgz)
-          COMPRESS_COMMAND="gzip -n -1"
+          COMPRESS_COMMAND="pigz -n -1"
           COMPRESS_EXT="tgz"
           ;;
       *.tar.bz2)
-          COMPRESS_COMMAND="bzip2 -1"
+          COMPRESS_COMMAND="pbzip2 -1"
           COMPRESS_EXT="tar.bz2"
           ;;
       *.tar.xz)
@@ -1171,7 +1171,7 @@ try_debian_packaging() {
   find_deb_package_name
 
   # generate "upstream" tarball for dpkg-source to diff against
-  git_ls_files | tar --null --no-recursion -c --transform "s#^#${DEB_PACKAGE_NAME}-$VERSHA/#S" -T - | gzip -1 > $MYOUTDIR/${DEB_PACKAGE_NAME}_$VERSHA.orig.tar.gz
+  git_ls_files | tar --null --no-recursion -c --transform "s#^#${DEB_PACKAGE_NAME}-$VERSHA/#S" -T - | pigz -1 > $MYOUTDIR/${DEB_PACKAGE_NAME}_$VERSHA.orig.tar.gz
 
   # update debian/changelog from git log
   changes_to_debian "$CHANGESFILE" > debian/changelog.git
