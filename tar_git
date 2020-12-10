@@ -871,11 +871,11 @@ maybe_use_mirror () {
     # Need to edit MYURL and REPO_URL
     for subst in "${GIT_SUBSTITUTIONS[@]}"
     do
-	sub1=${subst%/*}
-	sub2=${subst#*/}
+	sub1=${subst%=*}
+	sub2=${subst#*=}
 	echo 
-	MYURL=${MYURL/$sub1/$sub2}
-	REPO_URL=${REPO_URL/$sub1/$sub2}
+	MYURL=${MYURL/"$sub1"/"$sub2"}
+	REPO_URL=${REPO_URL/"$sub1"/"$sub2"}
     done
 
 }
