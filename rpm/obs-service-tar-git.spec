@@ -35,6 +35,8 @@ Requires:   util-linux
 # rsync and curl is used in download_files section
 Requires:   rsync
 Requires:   curl
+# git-lfs is used to cache and clone LFS git objects
+Requires:   git-lfs
 
 
 %description

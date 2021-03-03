@@ -684,8 +684,12 @@ git_ls_files () {
 
 cache_prefetch () {
 
-  NAME=$1
-  URL=$2
+  URL=$1
+  # remove possible trailing slash
+  TEMP_URL="${MYURL%/}"
+  # remove possible trailing .git
+  TEMP_URL="${TEMP_URL%.git}"
+  NAME="${TEMP_URL##*/}"
 
   if [ x"$CACHE_DIR" = "x" ]; then
       return
@@ -708,11 +712,16 @@ cache_prefetch () {
     popd >/dev/null
   else
     mkdir -p "$CLONE_DIR"
-    flock -w 7200 -x "$CLONE_DIR" git clone -q --mirror "$URL" "$CLONE_DIR"
+    flock -w 7200 -x "$CLONE_DIR" -c "git clone -q --mirror \"$URL\" \"$CLONE_DIR\" || rm -rf \"$CLONE_DIR\""
   fi
 
-  # override url with the fresh local cache
-  URL="$CLONE_DIR"
+  if [ -d "$CLONE_DIR" ]; then
+    pushd "$CLONE_DIR" >/dev/null
+      flock -w 7200 -x "$CLONE_DIR" git lfs fetch --all
+    popd >/dev/null
+
+    REFERENCE="--reference $CLONE_DIR"
+  fi
 }
 
 handle_submodules() {
@@ -766,9 +775,9 @@ handle_submodules() {
     path=$(git config -f .gitmodules --get submodule.$name.path | cut -d= -f2)
   
     URL=$url
-    cache_prefetch $name $URL
-  
     REFERENCE=""
+    cache_prefetch $URL
+  
     [ -d "$URL" ] && REFERENCE="--reference $URL"
   
     git submodule --quiet update --init --force $REFERENCE -- $path
@@ -871,11 +880,11 @@ maybe_use_mirror () {
     # Need to edit MYURL and REPO_URL
     for subst in "${GIT_SUBSTITUTIONS[@]}"
     do
-	sub1=${subst%/*}
-	sub2=${subst#*/}
+	sub1=${subst%=*}
+	sub2=${subst#*=}
 	echo 
-	MYURL=${MYURL/$sub1/$sub2}
-	REPO_URL=${REPO_URL/$sub1/$sub2}
+	MYURL=${MYURL/"$sub1"/"$sub2"}
+	REPO_URL=${REPO_URL/"$sub1"/"$sub2"}
     done
 
 }
@@ -883,9 +892,7 @@ maybe_use_mirror () {
 clone () {
 
   echo "Handling $CLONE_NAME"
-  URL=$MYURL
-  cache_prefetch $CLONE_NAME $URL
-  MYURL=$URL
+  cache_prefetch $MYURL
 
   if [ -d $CLONE_NAME ]; then
     pushd "$CLONE_NAME" >/dev/null
@@ -895,7 +902,7 @@ clone () {
       [ $? -eq 0 ] || error "couldn't update $CLONE_NAME"
     popd >/dev/null
   else
-    git clone -q "$MYURL" "$CLONE_NAME"
+    git clone -q $REFERENCE "$MYURL" "$CLONE_NAME"
     [ $? -eq 0 ] || error "couldn't clone $CLONE_NAME"
   fi
 
@@ -914,6 +921,7 @@ clone () {
 
   # initialize submodules if any
   handle_submodules $MYURL
+  # FIXME: Is it needed after handle_submodules?
   git submodule update --recursive --init --force
 
   popd >/dev/null
