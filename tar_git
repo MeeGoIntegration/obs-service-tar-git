@@ -347,6 +347,10 @@ find_compression () {
           COMPRESS_COMMAND="xz -1"
           COMPRESS_EXT="tar.xz"
           ;;
+      *.tar.zst)
+          COMPRESS_COMMAND="zstd -1"
+          COMPRESS_EXT="tar.zst"
+          ;;
       *)
           error "Source filename in .spec must end in .tar.gz, .tgz, .tar.bz2 or .tar.xz"
           ;;

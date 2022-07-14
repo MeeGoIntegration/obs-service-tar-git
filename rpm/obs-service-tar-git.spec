@@ -23,6 +23,8 @@ Requires:   pbzip2
 Requires:   pigz
 # in case .xz is used in .spec
 Requires:   xz
+# in case .zst is used in .spec
+Requires:   zstd
 # for find and xargs
 Requires:   findutils
 # for all standard utils
