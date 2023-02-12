@@ -17,7 +17,7 @@ See `tar_git`'s [interface definition](https://github.com/MeeGoIntegration/obs-s
 
 Note that, when a package is built by the SailfishOS-OBS, also a new release string is constructed, comprised of `1.`, the package revision at OBS and `.1.jolla`.  This is *not* visible in the processed RPM spec file of a package, because it is done while building a package.
 
-For example, when using `sfos4.2/0.3.0-5` as a tag name for the `harbour-storeman` app, this results in, e.g., `harbour-storeman-0.3.0-1.13.1.jolla.armv7hl.rpm`.
+For example, when using `sfos4.2/0.3.0-5` as a tag name for the `harbour-storeman` app, this results in, e.g., `harbour-storeman-0.3.0-1.13.1.jolla.armv7hl.rpm` as a final package name.
 
 #### The `token` parameter
 When the `token` parameter contains a non-empty string (not a regular expression), this string is used as a sub-string an original (i.e., unprocessed) tag must match to, otherwise the tag is discarded.  Note that such a tag is then subjected to the processing describes in steps 1 to 4, above.  Hence for the aforementioned example utilising "Storeman", `sfos` would be a suitable a token.  Or when marking release versions with the string `release` in the release version (e.g., `1.2.3-release2`), the string `release` is a suitable `token` to filter for release versions.
