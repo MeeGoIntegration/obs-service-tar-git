@@ -3,7 +3,7 @@
 
 Note that this README is not an exhaustive description or even a specification.  It is merely a user contributed write-up providing some guidance how `tar_git` works.  This write-up may have flaws or be fully errorneous at places; if you want to know something for sure, please read `tar_git`'s [interface definition](https://github.com/MeeGoIntegration/obs-service-tar-git/blob/master/tar_git.service) and its [shell script](https://github.com/MeeGoIntegration/obs-service-tar-git/blob/master/tar_git), which provides all its functionality.
 
-Side note: This is *not* about the regular OBS (Open Build Service) services (plug-in modules) `tar_scm` or `git_tar`: The only publicly visible place where `tar_git` runs is [the SailfishOS-OBS](https://build.merproject.org/), where it is the only and mandatory service.
+Side note: This is *not* about the regular OBS (Open Build Service) services (plug-in modules) `tar_scm` or `git_tar`: The only publicly visible place where `tar_git` runs is [the SailfishOS-OBS](https://build.merproject.org/), where it is the primary and mandatory service.
 
 ### Parameters for OBS' `_service` file
 See `tar_git`'s [interface definition](https://github.com/MeeGoIntegration/obs-service-tar-git/blob/master/tar_git.service), its [usage output](https://github.com/MeeGoIntegration/obs-service-tar-git/blob/master/tar_git#L69-L83) for descriptions of the parameters and an [exemplary `_service`](https://build.merproject.org/package/view_file/sailfishos:chum:testing/harbour-storeman-installer/_service) file.
