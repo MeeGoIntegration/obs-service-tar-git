@@ -19,6 +19,8 @@ See `tar_git`'s [interface definition](https://github.com/MeeGoIntegration/obs-s
 #### Examples
 Once understood how `tar_git`'s parsing of Git tags works, one can play with it: For `1.2.3+git1`, `1.2.3~git1` and `1.2.3.git1` the whole string will be used as the processed`<version>` string and become part of the RPM file-name; for `1.2.3-git4`, `git4/1.2.3`  and `git/1.2.3-4` only the `1.2.3` and the release field will be initially set to `git4` for the latter three examples (which is later substituted by `1.I.1`).
 
+As an "real life" example, when using `sfos4.2/0.3.0-5` as a tag name for the `harbour-storeman` app, this results in, e.g., `harbour-storeman-0.3.0-1.13.1.jolla.armv7hl.rpm` as a final package name.
+
 ## The `token` parameter
 When the `token` parameter contains a non-empty string (not a regular expression), this string is used as a sub-string an original (i.e., unprocessed) Git tag must match to, otherwise the tag is discarded.  Note that such a Git tag is then subjected to the processing described in steps 1 to 4, above.  Hence for the aforementioned example using the `harbour-storeman` app, `sfos` would be a suitable `token`.  Or when marking release versions with the string `release` in Git tags (e.g., `1.2.3-release2`), the string `release` is a suitable `token` to filter for.
 
