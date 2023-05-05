@@ -377,8 +377,10 @@ get_tagver_from_tag () {
 
     if [ $(echo $tag | grep "/") ] ; then
     # allow tags to have a prefix to allow vendor marking
-      tagprefix=$(echo $tag | cut -f1 -d'/')
-      tagver=$(echo $tag | cut -f2 -d'/')
+    # and additional namespacing components
+    # e.g. sfos/4.4.0/1.2.3
+      tagprefix=${tag%%/*}
+      tagver=${tag##*/}
     # some people like to prefix versions with a v
     elif [ $(echo $tag | grep -Po "^v") ]; then
       tagver=$(echo $tag | cut -f2 -d'v')
