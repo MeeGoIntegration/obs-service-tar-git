@@ -686,7 +686,7 @@ cache_prefetch () {
 
   URL=$1
   # remove possible trailing slash
-  TEMP_URL="${MYURL%/}"
+  TEMP_URL="${URL%/}"
   # remove possible trailing .git
   TEMP_URL="${TEMP_URL%.git}"
   NAME="${TEMP_URL##*/}"
