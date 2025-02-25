@@ -20,5 +20,8 @@
   <parameter name="dumb">
     <description>Take content of revision as-is without automatic processing (Y/N)</description>
   </parameter>
+  <parameter name="use-spec-version">
+    <description>Use version from spec file instead of git tag (Y/N)</description>
+  </parameter>
 </service>
 
