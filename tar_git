@@ -1027,8 +1027,19 @@ rpm_pkg () {
      echo -n $VERSHA > .tarball-version
   fi
   
-  commitdate=$(git log -1 --date=short-local --pretty=format:%cd)
-  git_ls_files | tar --mtime "$commitdate" --null --no-recursion -c --transform "s#^#$PACKAGE_NAME-$VERSHA/#S" -T - | $COMPRESS_COMMAND > $MYOUTDIR/$PACKAGE_NAME-$VERSHA.$COMPRESS_EXT
+  local committs=$(git log -1 --pretty=format:%ct)
+  git_ls_files | tar \
+    -c \
+    --sort name \
+    --format pax \
+    --pax-option 'exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime' \
+    --owner=0 --group=0 --numeric-owner \
+    --mtime "@$committs" \
+    --null \
+    --no-recursion \
+    --transform "s#^#$PACKAGE_NAME-$VERSHA/#S" \
+    -T - \
+  | $COMPRESS_COMMAND > $MYOUTDIR/$PACKAGE_NAME-$VERSHA.$COMPRESS_EXT
 
   set_spec_version
 
@@ -1179,7 +1190,19 @@ try_debian_packaging() {
   find_deb_package_name
 
   # generate "upstream" tarball for dpkg-source to diff against
-  git_ls_files | tar --null --no-recursion -c --transform "s#^#${DEB_PACKAGE_NAME}-$VERSHA/#S" -T - | pigz -1 > $MYOUTDIR/${DEB_PACKAGE_NAME}_$VERSHA.orig.tar.gz
+  local committs=$(git log -1 --pretty=format:%ct)
+  git_ls_files | tar \
+    -c \
+    --sort name \
+    --format pax \
+    --pax-option 'exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime' \
+    --owner=0 --group=0 --numeric-owner \
+    --mtime "@$committs" \
+    --null \
+    --no-recursion \
+    --transform "s#^#${DEB_PACKAGE_NAME}-$VERSHA/#S" \
+    -T - \
+  | pigz -n -1 > $MYOUTDIR/${DEB_PACKAGE_NAME}_$VERSHA.orig.tar.gz
 
   # update debian/changelog from git log
   changes_to_debian "$CHANGESFILE" > debian/changelog.git
