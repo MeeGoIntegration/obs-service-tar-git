@@ -41,6 +41,7 @@ set_default_params () {
   DEBIAN="N"
   FILESERVER=""
   DUMB="N"
+  USE_SPEC_VERSION="N"
   REPO_NAME=""
   CLONE_NAME=""
   SVC_NAME=""
@@ -76,6 +77,7 @@ usage () {
     echo '	--debian	Y/N switch to turn on debian packaging support (defaults to N)'
     echo '	--fileserver    baseurl of a location for fetching files listed in a _sources file in the rpm subdir'
     echo '	--dumb          Y/N switch to take content of revision as-is without automatic processing'
+    echo '	--use-spec-version	Y/N switch to use spec version instead of tag (defaults to N)'
     echo 'If your git repo has multiple spec files in the rpm subdirectory set the env variable OBS_SERVICE_PACKAGE '
     echo 'to the name of the one you want to use (without .spec suffix)'
     echo 'The _sources file is expected to contain lines of <sha1sum> <subdir>/<filename>'
@@ -115,6 +117,10 @@ parse_params () {
       ;;
       *-fileserver)
         FILESERVER="$2"
+        shift
+      ;;
+      *-use-spec-version)
+        USE_SPEC_VERSION="$2"
         shift
       ;;
       *-help)
@@ -202,6 +208,11 @@ sanitise_params () {
     exit 1
   fi
 
+  if [ ! -z "$USE_SPEC_VERSION" ] && [[ ! "$USE_SPEC_VERSION" =~ $regex ]]; then
+    echo "invalid use-spec-version switch"
+    usage
+    exit 1
+  fi
 }
 
 find_spec_file () {
@@ -935,7 +946,10 @@ set_versha () {
   RELEASE=""
 
   # determine version from latest tag in reverse date sorted list of tags that looks like a version
-  find_version_tag
+
+  if [ "x$USE_SPEC_VERSION" = "xN" ]; then
+    find_version_tag
+  fi
   
   if [ "x$VERSION" = "x" ]; then 
     # none found, fallback to using version from spec file
@@ -951,7 +965,7 @@ set_versha () {
   SEMI_TAG=$(git describe --tags --always)
   TAG_NAME="$SEMI_TAG"
 
-  if [ "x$TAG_NAME" = "x$VERSION_FULLTAG" ] ; then
+  if [ "x$TAG_NAME" = "x$VERSION_FULLTAG" -o "x$USE_SPEC_VERSION" = "xY" ] ; then
     # same as the version's tag, don't need to append anything
     SHA=""
   else
