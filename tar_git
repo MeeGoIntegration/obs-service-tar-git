@@ -452,9 +452,9 @@ get_changes_header () {
   local fmt='
     r=%(refname:short)
     t=%(*objecttype)
-    d=%(*committerdate:iso8601)
-    n=%(*authorname)
-    e=%(*authoremail)
+    d=%(taggerdate:iso8601)
+    n=%(taggername)
+    e=%(taggeremail)
   
     if test "z$t" = z
     then
