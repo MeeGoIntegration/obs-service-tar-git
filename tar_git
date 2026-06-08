@@ -713,7 +713,7 @@ cache_prefetch () {
   SERVER_SUBDIR="$(dirname $URL)"
   [[ "$SERVER_SUBDIR" = "." ]] && SERVER_SUBDIR=$URL
   
-  SERVER_DIR="$CACHE_DIR/$(echo $SERVER_SUBDIR | sed -e 's/\//_/g' -e 's/:/_/g')"
+  SERVER_DIR="$CACHE_DIR/$(echo $SERVER_SUBDIR | sed -e 's/[/:@]/_/g')"
   mkdir -p "$SERVER_DIR"
   CLONE_DIR="$SERVER_DIR/$NAME"
 
