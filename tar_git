@@ -68,7 +68,7 @@ get_config_options () {
 }
 
 usage () {
-    echo 'Usage: $SERVICE --url $URL --outdir $OUT [--branch $BRANCH] [--revision $REVISION] [--token $TOKEN] [--debian Y|N]'
+    echo 'Usage: $SERVICE --url $URL --outdir $OUT [--branch $BRANCH] [--revision $REVISION] [--token $TOKEN] [--debian Y|N] [--fileserver $BASEURL] [--dumb Y|N] [--use-spec-version Y|N]'
     echo '	--url		url of git repo to clone from. Can be remote http[s]/SSH or local dir'
     echo '	--outdir	path to output directory'
     echo '	--branch	name of branch to use. If not specified default branch (or currently checked out one) will be used'
